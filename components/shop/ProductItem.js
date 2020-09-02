@@ -1,23 +1,28 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native'
 
 const ProductItem = props => {
+
+    let Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
     
     return (
-        <View style={styles.product}>
-            <View style={styles.imageContainer}>
-                <Image source={{uri: props.image}} style={styles.image} />
+        <Touchable onPress={props.onViewDetail}>
+            <View style={styles.product}>
+                <View style={styles.imageContainer}>
+                    <Image source={{uri: props.image}} style={styles.image} />
+                </View>
+                
+                <View style={styles.detail}>
+                <Text style={styles.title}>{props.title}</Text>
+                <Text style={styles.price}>{props.price.toFixed(2)}</Text>
+                </View>
+                <View style={styles.actions}>
+                    <Button title='view details' onPress={props.onViewDetail} />
+                    <Button title='add to cart' onPress={props.onAddToCart} />
+                </View>
             </View>
-            
-            <View style={styles.detail}>
-            <Text style={styles.title}>{props.title}</Text>
-            <Text style={styles.price}>{props.price.toFixed(2)}</Text>
-            </View>
-            <View style={styles.actions}>
-                <Button title='view details' onPress={props.onViewDetail} />
-                <Button title='add to cart' onPress={props.onAddToCart} />
-            </View>
-        </View>
+        </Touchable>
+        
     )
 }
 
