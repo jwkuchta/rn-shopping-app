@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView, Button, Image } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import * as cartActions from '../../store/actions/cart'
 
 const ProductDetailScreen = props => {
 
@@ -8,11 +9,13 @@ const ProductDetailScreen = props => {
     const availableProducts = useSelector(state => state.products.availableProducts)
     const selectedProduct = availableProducts.find(product => product.id === productId)
 
+    const dispatch = useDispatch()
+
     return (
         <ScrollView>
             <Image source={{uri: selectedProduct.imageUrl}} style={styles.image} />
             <View style={styles.actions}>
-                <Button title='Add to Cart' onPress={() => {}} />
+                <Button title='Add to Cart' onPress={() => dispatch(cartActions.addToCart(selectedProduct))} />
             </View>
             <Text style={styles.price} >${selectedProduct.price.toFixed(2)}</Text>
             <Text style={styles.description} >{selectedProduct.description}</Text>

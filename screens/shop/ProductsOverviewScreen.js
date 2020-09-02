@@ -2,10 +2,18 @@ import React from 'react'
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
 import { useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem'
+import { useDispatch } from 'react-redux'
+import * as cartActions from '../../store/actions/cart'
 
 const ProductsOverviewScreen = props => {
 
     const products = useSelector(state => state.products.availableProducts)
+
+    const dispatch = useDispatch()
+
+    const addItemToCart = item => {
+        dispatch(cartActions.addToCart(item))
+    }
     
     const renderProduct = product => {
         return (
@@ -19,7 +27,8 @@ const ProductsOverviewScreen = props => {
                     productTitle: product.item.title
                 })
             }}
-            onAddToCart={() => {}}
+            // onAddToCart={(product) => addItemToCart(product.item)}
+            onAddToCart={() => dispatch(cartActions.addToCart(product.item))}
             />
         )
     }

@@ -18,11 +18,11 @@ export default (state = initState, action) => {
                     state.items[addedProd.id].quantity + 1,
                     prodPrice,
                     prodTitle,
-                    state.items[addedProd.id].sum + prodPrice
+                    state.items[addedProd.id].total + prodPrice
                 )
                 return {
                     ...state, 
-                    items: {...state.items, [addedProd.id]: updatedCartItem},
+                    items: { ...state.items, [addedProd.id]: updatedCartItem},
                     total: state.total + prodPrice
                 }
 
@@ -30,7 +30,7 @@ export default (state = initState, action) => {
                 const newCartItem = new CartItem(1, prodPrice, prodTitle, prodPrice)
                 return {
                     ...state, 
-                    [addedProd.id]: newCartItem,
+                    items: {...state.items, [addedProd.id]: newCartItem}, 
                     total: state.total + prodPrice
                 }
             }
