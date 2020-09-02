@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#888',
         textAlign: 'center',
-        marginVertical: 20
+        marginVertical: 20,
+        fontFamily: 'open-sans'
     },
     description: {
         fontSize: 16,

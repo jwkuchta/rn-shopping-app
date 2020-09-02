@@ -16,7 +16,13 @@ const ProducstNavigator = createStackNavigator({
         headerStyle: {
             backgroundColor: Platform.OS === 'android' ? colors.primary : ''
         },
-        headerTintColor: Platform.OS === 'android' ? 'white' : colors.primary
+        headerTintColor: Platform.OS === 'android' ? 'white' : colors.primary,
+        headerTitleStyle: {
+            fontFamily: 'open-sans-bold'
+        },
+        headerBackTitleStyle: {
+            fontFamily: 'open-sans'
+        }
     }
 })
 
