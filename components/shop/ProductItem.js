@@ -6,7 +6,7 @@ const ProductItem = props => {
     let Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
     
     return (
-        <Touchable onPress={props.onViewDetail}>
+        <Touchable onPress={props.onViewDetail} useForeground>
             <View style={styles.product}>
                 <View style={styles.imageContainer}>
                     <Image source={{uri: props.image}} style={styles.image} />

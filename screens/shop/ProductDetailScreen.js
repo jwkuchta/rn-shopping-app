@@ -9,10 +9,14 @@ const ProductDetailScreen = props => {
     const selectedProduct = availableProducts.find(product => product.id === productId)
 
     return (
-        <View style={styles.screen}>
-            <Text>{selectedProduct.description}</Text>
-            <Text>{selectedProduct.title}</Text>
-        </View>
+        <ScrollView>
+            <Image source={{uri: selectedProduct.imageUrl}} style={styles.image} />
+            <View style={styles.actions}>
+                <Button title='Add to Cart' onPress={() => {}} />
+            </View>
+            <Text style={styles.price} >${selectedProduct.price.toFixed(2)}</Text>
+            <Text style={styles.description} >{selectedProduct.description}</Text>
+        </ScrollView>
     )
 }
 
@@ -34,6 +38,26 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    image: {
+        width: '100%',
+        height: 300,
+
+    },
+    price: {
+        fontSize: 20,
+        color: '#888',
+        textAlign: 'center',
+        marginVertical: 20
+    },
+    description: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginHorizontal: 20
+    },
+    actions: {
+        marginVertical: 10,
+        alignItems: 'center'
     }
 })
 
