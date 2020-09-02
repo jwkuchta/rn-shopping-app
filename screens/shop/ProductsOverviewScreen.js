@@ -1,9 +1,13 @@
 import React from 'react'
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, Platform } from 'react-native'
 import { useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem'
 import { useDispatch } from 'react-redux'
 import * as cartActions from '../../store/actions/cart'
+// import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+// import HeaderButton from '../UI/HeaderButton'
+import { Ionicons } from '@expo/vector-icons'
+import colors from '../../constants/colors'
 
 const ProductsOverviewScreen = props => {
 
@@ -45,8 +49,20 @@ const ProductsOverviewScreen = props => {
     )
 }
 
-ProductsOverviewScreen.navigationOptions = {
-    headerTitle: 'All Products'
+ProductsOverviewScreen.navigationOptions = (navData) => {
+    return {
+        headerTitle: 'All Products', 
+        headerRight: () => (
+            <Ionicons 
+                name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} 
+                size={23}
+                style={{marginRight: 15}}
+                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                onPress={() => navData.navigation.navigate('Cart')}
+            />
+        )
+    }
+    
 }
 
 const styles = StyleSheet.create({
@@ -58,24 +74,3 @@ const styles = StyleSheet.create({
 })
 
 export default ProductsOverviewScreen
-
-// import React from 'react';
-// import { FlatList, Text } from 'react-native';
-// import { useSelector } from 'react-redux';
-
-// const ProductsOverviewScreen = props => {
-//   const products = useSelector(state => state.products.availableProducts);
-//   return (
-//     <FlatList
-//       data={products}
-//       keyExtractor={item => item.id}
-//       renderItem={itemData => <Text>{itemData.item.title}</Text>}
-//     />
-//   );
-// };
-
-// ProductsOverviewScreen.navigationOptions = {
-//   headerTitle: 'All Products'
-// };
-
-// export default ProductsOverviewScreen;
