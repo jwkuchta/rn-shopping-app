@@ -1,12 +1,16 @@
 import React from 'react'
-import { View, FlatList, StyleSheet, Text, Platform } from 'react-native'
+import { FlatList, Platform, Button } from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
+import colors from '../../constants/colors'
+import { deleteProduct } from '../../store/actions/products'
+
 
 const UserProductsScreen = props => {
 
     const userProducts = useSelector(state => state.products.availableProducts)
+    const dispatch = useDispatch()
     return (
         <FlatList 
         data={userProducts}
@@ -16,9 +20,19 @@ const UserProductsScreen = props => {
             image={itemData.item.imageUrl}
             title={itemData.item.title}
             price={itemData.item.price}
-            onViewDetail={() => {}}
-            onAddToCart={() => {}}
-            />
+            onSelect={() => {}}
+            >
+                <Button 
+                title='Edit' 
+                onPress={() => {}} 
+                color={colors.primary}
+                />
+                <Button 
+                title='Delete' 
+                onPress={() => dispatch(deleteProduct(itemData.item.id))} 
+                color={colors.primary} 
+                />
+            </ProductItem>
         )}
         />
     )
