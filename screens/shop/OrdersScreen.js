@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, FlatList, Platform } from 'react-native'
 import { useSelector } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
+import OrderItem from '../../components/shop/OrderItem'
 
 const OrdersScreen = props => {
     const orders = useSelector(state => state.orders.orders)
@@ -10,7 +11,7 @@ const OrdersScreen = props => {
         <FlatList 
         data={orders}
         keyExtractor={item => item.id}
-        renderItem={itemData => <Text>{itemData.item.total}</Text>}
+        renderItem={itemData => <OrderItem  total={itemData.item.total} date={itemData.item.readableDate}/>}
         />
     ) 
 }

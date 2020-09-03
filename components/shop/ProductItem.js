@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     buttons: {
         flexDirection: 'row'
     },
-    product: {
+    product: { // shadowy look, can be reused in other cart-like components
         shadowColor: 'black',
         shadowOpacity: 0.26,
         shadowOffset: {width: 0, height: 2},
