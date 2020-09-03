@@ -12,7 +12,6 @@ import colors from '../../constants/colors'
 const ProductsOverviewScreen = props => {
 
     const products = useSelector(state => state.products.availableProducts)
-
     const dispatch = useDispatch()
 
     const addItemToCart = item => {
@@ -51,6 +50,15 @@ const ProductsOverviewScreen = props => {
 ProductsOverviewScreen.navigationOptions = (navData) => {
     return {
         headerTitle: 'All Products', 
+        headerLeft: () => (
+            <Ionicons 
+                name={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} 
+                size={23}
+                style={{marginLeft: 15}}
+                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                onPress={() => navData.navigation.toggleDrawer()}
+            />
+        ),
         headerRight: () => (
             <Ionicons 
                 name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} 

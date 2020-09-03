@@ -9,10 +9,12 @@ import ShopNavigator from './navigation/ShopNavigator'
 import { AppLoading } from 'expo'
 import * as Font from 'expo-font'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import ordersReducer from './store/reducers/orders'
 
 const rootReducer = combineReducers({
   products: productsReducer,
-  carts: cartsReducer
+  carts: cartsReducer,
+  orders: ordersReducer
 })
                                       // remove when ready for deployment
 const store = createStore(rootReducer, composeWithDevTools()) 
