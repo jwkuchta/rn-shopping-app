@@ -1,4 +1,4 @@
-import { ADD_TO_CART } from "../actions/cart"
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/cart"
 import CartItem from '../../models/cart-item'
 
 const initState = {
@@ -13,27 +13,47 @@ export default (state = initState, action) => {
             const prodPrice = addedProd.price 
             const prodTitle = addedProd.title
 
+            let newCartItem
+
             if (state.items[addedProd.id]) {
-                const updatedCartItem = new CartItem(
+                newCartItem = new CartItem(
                     state.items[addedProd.id].quantity + 1,
                     prodPrice,
                     prodTitle,
                     state.items[addedProd.id].total + prodPrice
                 )
-                return {
-                    ...state, 
-                    items: { ...state.items, [addedProd.id]: updatedCartItem},
-                    total: state.total + prodPrice
-                }
-
             } else {
-                const newCartItem = new CartItem(1, prodPrice, prodTitle, prodPrice)
-                return {
-                    ...state, 
-                    items: {...state.items, [addedProd.id]: newCartItem}, 
-                    total: state.total + prodPrice
-                }
+                newCartItem = new CartItem(1, prodPrice, prodTitle, prodPrice)
             }
+            return {
+                ...state, 
+                items: {...state.items, [addedProd.id]: newCartItem}, 
+                total: state.total + prodPrice
+            }
+        case REMOVE_FROM_CART:
+            const selectedItem = state.items[action.payload]
+            const currentQuantity = selectedItem.quantity
+            let updatedCart
+            if (currentQuantity > 1) {
+                const updatedItem = new CartItem(
+                    selectedItem.quantity - 1, 
+                    selectedItem.productPrice, 
+                    selectedItem.productTitle, 
+                    selectedItem.total - selectedItem.productPrice
+                )
+                updatedCart = {...state.items, [action.payload]: updatedItem
+                }
+            } else {
+                updatedCart = {...state.items}
+                delete updatedCart[action.payload]
+            }
+            return {
+                ...state,
+                items: updatedCart,
+                total: state.total - selectedItem.productPrice
+            }
+        default:
+            return state
     }
-    return state
 }
+
