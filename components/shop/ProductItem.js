@@ -6,7 +6,7 @@ const ProductItem = props => {
     let Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
     
     return (
-        <Touchable onPress={props.onViewDetail} useForeground>
+        <Touchable onPress={props.onSelect} useForeground>
             <View style={styles.product}>
                 <View style={styles.imageContainer}>
                     <Image source={{uri: props.image}} style={styles.image} />
@@ -17,8 +17,7 @@ const ProductItem = props => {
                 <Text style={styles.price}>{props.price.toFixed(2)}</Text>
                 </View>
                 <View style={styles.actions}>
-                    <Button title='view details' onPress={props.onViewDetail} />
-                    <Button title='add to cart' onPress={props.onAddToCart} />
+                    {props.children}
                 </View>
             </View>
         </Touchable>
