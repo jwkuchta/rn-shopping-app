@@ -5,13 +5,22 @@ import { Ionicons } from '@expo/vector-icons'
 import OrderItem from '../../components/shop/OrderItem'
 
 const OrdersScreen = props => {
+
     const orders = useSelector(state => state.orders.orders)
 
     return (
         <FlatList 
         data={orders}
         keyExtractor={item => item.id}
-        renderItem={itemData => <OrderItem  total={itemData.item.total} date={itemData.item.readableDate}/>}
+        deletable={false}
+        renderItem={itemData => (
+            <OrderItem  
+            total={itemData.item.total} 
+            date={itemData.item.readableDate}
+            title={itemData.item.title}
+            items={itemData.item.items}
+            />
+        )}
         />
     ) 
 }

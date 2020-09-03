@@ -14,6 +14,7 @@ const CartItem = props => {
             </Text>
             <View>
                 <Text style={styles.mainText}>${props.total.toFixed(2)}</Text>
+                {props.deletable && // this comp is used in two spots, we don't want this button to show on the OrdersScreen
                 <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
                     <Ionicons 
                     name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
@@ -21,6 +22,7 @@ const CartItem = props => {
                     color='red'
                     />
                 </TouchableOpacity>
+                }
             </View>
         </View>
     )
