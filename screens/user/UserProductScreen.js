@@ -55,15 +55,15 @@ UserProductsScreen.navigationOptions = (navData) => {
                 onPress={() => navData.navigation.toggleDrawer()}
             />
         ),
-        // headerRight: () => (
-        //     <Ionicons 
-        //         name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} 
-        //         size={23}
-        //         style={{marginRight: 15}}
-        //         color={Platform.OS === 'android' ? 'white' : colors.primary}
-        //         onPress={() => navData.navigation.navigate('Cart')}
-        //     />
-        // )
+        headerRight: () => (
+            <Ionicons 
+                name={Platform.OS === 'android' ? 'md-create' : 'ios-create'} 
+                size={23}
+                style={{marginRight: 15}}
+                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                onPress={() => navData.navigation.navigate('EditProduct')}
+            />
+        )
     }
     
 }
