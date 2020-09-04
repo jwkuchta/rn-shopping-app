@@ -1,26 +1,29 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native'
+import Card from '../UI/Card'
 
 const ProductItem = props => {
 
     let Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity
     
     return (
-        <Touchable onPress={props.onSelect} useForeground>
-            <View style={styles.product}>
-                <View style={styles.imageContainer}>
-                    <Image source={{uri: props.image}} style={styles.image} />
+        <Card style={styles.product}>
+            <Touchable onPress={props.onSelect} useForeground>
+                <View style={styles.product}>
+                    <View style={styles.imageContainer}>
+                        <Image source={{uri: props.image}} style={styles.image} />
+                    </View>
+                    
+                    <View style={styles.detail}>
+                    <Text style={styles.title}>{props.title}</Text>
+                    <Text style={styles.price}>{props.price.toFixed(2)}</Text>
+                    </View>
+                    <View style={styles.actions}>
+                        {props.children}
+                    </View>
                 </View>
-                
-                <View style={styles.detail}>
-                <Text style={styles.title}>{props.title}</Text>
-                <Text style={styles.price}>{props.price.toFixed(2)}</Text>
-                </View>
-                <View style={styles.actions}>
-                    {props.children}
-                </View>
-            </View>
-        </Touchable>
+            </Touchable>
+        </Card>
         
     )
 }
@@ -34,14 +37,7 @@ const styles = StyleSheet.create({
     buttons: {
         flexDirection: 'row'
     },
-    product: { // shadowy look, can be reused in other cart-like components
-        shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: {width: 0, height: 2},
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white',
+    product: {
         height: 300,
         margin: 20
     },

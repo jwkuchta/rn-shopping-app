@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Platform, Button } from 'react-native'
+import { FlatList, Platform, Button, Alert } from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
@@ -14,6 +14,16 @@ const UserProductsScreen = props => {
 
     const productHandler = (id) => {
         props.navigation.navigate('EditProduct', {id: id})
+    }
+
+    const deleteHandler = (id) => {
+        Alert.alert(
+            'Are you sure?', "Do you really want to delete this item?",
+            [
+                { text: 'No', style: 'default'},
+                { text: 'Yes', style: 'destructive', onPress: () => dispatch(deleteProduct(id))}
+            ]
+        )
     }
 
     return (
@@ -34,7 +44,7 @@ const UserProductsScreen = props => {
                 />
                 <Button 
                 title='Delete' 
-                onPress={() => dispatch(deleteProduct(itemData.item.id))} 
+                onPress={() => deleteHandler(itemData.item.id)} 
                 color={colors.primary} 
                 />
             </ProductItem>
