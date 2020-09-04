@@ -8,21 +8,23 @@ const ProductItem = props => {
     
     return (
         <Card style={styles.product}>
-            <Touchable onPress={props.onSelect} useForeground>
-                <View style={styles.product}>
-                    <View style={styles.imageContainer}>
-                        <Image source={{uri: props.image}} style={styles.image} />
+            <View style={styles.touchable}>
+                <Touchable onPress={props.onSelect} useForeground>
+                    <View>
+                        <View style={styles.imageContainer}>
+                            <Image source={{uri: props.image}} style={styles.image} />
+                        </View>
+                        
+                        <View style={styles.detail}>
+                        <Text style={styles.title}>{props.title}</Text>
+                        <Text style={styles.price}>{props.price.toFixed(2)}</Text>
+                        </View>
+                        <View style={styles.actions}>
+                            {props.children}
+                        </View>
                     </View>
-                    
-                    <View style={styles.detail}>
-                    <Text style={styles.title}>{props.title}</Text>
-                    <Text style={styles.price}>{props.price.toFixed(2)}</Text>
-                    </View>
-                    <View style={styles.actions}>
-                        {props.children}
-                    </View>
-                </View>
-            </Touchable>
+                </Touchable>
+            </View>
         </Card>
         
     )
@@ -35,7 +37,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     buttons: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 20
     },
     product: {
         height: 300,
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: '60%',
+        height: '100%',
 
     },
     title: {
@@ -74,6 +77,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         overflow: 'hidden'
+    },
+    touchable: {
+        borderRadius: 10,
+        overflow: "hidden"
     }
 })
 

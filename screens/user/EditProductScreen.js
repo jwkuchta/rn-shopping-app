@@ -1,97 +1,133 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useReducer } from 'react'
 import { View, Text, StyleSheet, TextInput, ScrollView, Platform, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
 import * as productActions from '../../store/actions/products'
+import Input from '../../components/UI/Input'
+
+// build it outside the component to avoid unnecessary rebuilding 
+const formReducer = (state, action) => {
+    if (action.type === 'FORM_UPDATE') {
+        const updatedValues = {
+            ...state.inputValues, // from 27032
+            [action.input]: action.value
+        }
+        const updatedInputValidities = {
+            ...state.inputValidities,
+            [action.input]: action.isValid
+        }
+        let updatedFormIsValid = true
+        for (let key in updatedInputValidities) {
+            updatedFormIsValid = updatedFormIsValid && updatedInputValidities[key]
+        }
+        return {
+            formIsValid: updatedFormIsValid,
+            inputValues: updatedValues,
+            inputValidities: updatedInputValidities
+        }
+    }
+    return state
+}
 
 const EditProductScreen = props => {
-
-    // console.log(props.navigation.getParam('id'))
 
     const prodId = props.navigation.getParam('id')
     const editedProd = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId))
 
-    console.log('editedProd', editedProd)
-
-    const [ title, setTitle ] = useState(editedProd ? editedProd.title : '')
-    const [ titleIsValid, setTitleIsValid ] = useState(false)
-    const [ imageUrl, setImageUrl ] = useState(editedProd ? editedProd.imageUrl : '')
-    const [ price, setPrice ] = useState('') // price should not be edited, unless new product
-    const [ description, setDescription ] = useState(editedProd ? editedProd.description : '')
-
     const dispatch = useDispatch()
 
+    // useReducer helps with state management when you have a lot of local state to manage
+    // replaces useState()
+    const [ formState, dispatchFormState ] = useReducer(formReducer, {
+        inputValues: {
+            title: editedProd ? editedProd.title : '',
+            imageUrl: editedProd ? editedProd.imageUrl : '',
+            price: '',
+            description: editedProd ? editedProd.description : ''
+        }, 
+        inputValidities: {
+            title: editedProd ? true : false,
+            imageUrl: editedProd ? true : false,
+            price: editedProd ? true : false,
+            description: editedProd ? true : false
+        },
+        formIsValid: editedProd ? true : false
+    })
+
     const submitHandler = useCallback(() => {
-        if (!setTitleIsValid) {
-            Alert.alert('Invalid title', 'Please submit a valid title', { text: 'ok '})
+        if (!formState.formIsValid) {
+            Alert.alert('Invalid title', 'Please submit a valid title', [{ text: 'Ok'}])
             return
         }
         if (editedProd) {
-            dispatch(productActions.updatedProduct(prodId, title, imageUrl, description))
+            dispatch(productActions.updatedProduct(
+                prodId, 
+                formState.inputValues.title, 
+                formState.inputValues.imageUrl, 
+                formState.inputValues.description
+                ))
         } else {
-            dispatch(productActions.createProduct(title, imageUrl, description, +price))
+            dispatch(productActions.createProduct(
+                formState.inputValues.title, 
+                formState.inputValues.imageUrl, 
+                formState.inputValues.description, 
+                +formState.inputValues.price))
         }
         props.navigation.goBack()
-    }, [dispatch, prodId, title, description, imageUrl, price])
+    }, [ dispatch, prodId, formState ])
 
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler })
     }, [submitHandler])
 
-    const titleTextHandler = text => {
-        if (text.trim().length === 0) {
-            setTitleIsValid(false)
-        } else {
-            setTitleIsValid(true)
+    const inputChangeHandler = (inputId, text) => {
+        let isValid = false
+        if (text.trim().length > 0) {
+            isValid = true
         }
-        setTitle(text)   
+        dispatchFormState({ 
+            type: 'FORM_UPDATE', 
+            value: formState.inputValues[inputId],
+            isValid: true,
+            inputId: inputId
+        })  
     }
 
     return (
         <ScrollView>
             <View style={styles.form}>
-                <View style={styles.formControl}>
-                    <Text style={styles.label}>Title</Text>
-                    <TextInput 
-                    style={styles.input} 
-                    value={title}
-                    onChangeText={input => titleTextHandler(input)} 
-                    autoCapitalize='sentences'
-                    // autoCorrect
-                    // returnKeyType='next'
-                    // onEndEditing={() => console.log(value)}
-                    // onSubmitEditing={() => console.log('submitting')}
-                    />
-                </View>
-                {!titleIsValid && <Text>Please enter a valid title</Text>}
-                <View style={styles.formControl}>
-                    <Text style={styles.label}>Image URL</Text>
-                    <TextInput 
-                    style={styles.input} 
-                    value={imageUrl} 
-                    onChangeText={input => setImageUrl(input)}
-                    />
-                </View>
+                <Input
+                label="Title"
+                errorText="Please enter a valid title"
+                autoCapitalize="sentences" 
+                returnKeyType="next"
+                autoCorrect
+                />
+                <Input
+                label="Image Url"
+                errorText="Please enter a valid image URL"
+                autoCapitalize="sentences" 
+                returnKeyType="next"
+                autoCorrect
+                />
                 {!editedProd && (
-                    <View style={styles.formControl}>
-                    <Text style={styles.label}>Price</Text>
-                    <TextInput 
-                    style={styles.input} 
-                    value={price} 
-                    onChangeText={input => setPrice(input)}
-                    keyboardType='decimal-pad'
+                    <Input
+                    label="Price"
+                    errorText="Please enter a valid price"
+                    returnKeyType="next"
+                    autoCorrect
+                    keyboardType="decimal-pad"
                     />
-                </View>
                 )}
-                <View style={styles.formControl}>
-                    <Text style={styles.label}>Description</Text>
-                    <TextInput 
-                    style={styles.input} 
-                    value={description} 
-                    onChangeText={input => setDescription(input)}
-                    />
-                </View>
+                <Input
+                label="Peoduct Description"
+                errorText="Please enter a valid product description"
+                autoCapitalize="sentences" 
+                returnKeyType="next"
+                autoCorrect
+                numberOfLines={3}
+                />
             </View>   
         </ScrollView>  
     )
@@ -118,21 +154,12 @@ EditProductScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     form: {
         margin: 20
-    },
-    formControl: {
-        width: '100%'
-    },
-    label: {
-        fontFamily: 'open-sans-bold',
-        marginVertical: 8
-    },
-    input: {
-        paddingHorizontal: 2,
-        paddingVertical: 5,
-        borderBottomColor: '#ccc',
-        borderBottomWidth: 1
     }
 })
 
 export default EditProductScreen
+
+// look into Validate.js for more validations
+
+
 

@@ -26,15 +26,17 @@ const ProductsOverviewScreen = props => {
             <ProductItem 
             image={product.item.imageUrl} 
             price={product.item.price} 
-            title={product.item.price}
+            title={product.item.title}
             onSelect={() => selectItemHandler(product.item.id, product.item.title)}
             >
                 <Button 
+                style={styles.button}
                 title='view details' 
                 onPress={() => selectItemHandler(product.item.id, product.item.title)} 
                 color={colors.primary}
                 />
                 <Button 
+                style={styles.button}
                 title='add to cart' 
                 onPress={() => dispatch(cartActions.addToCart(product.item))} 
                 color={colors.primary} 
@@ -85,6 +87,9 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    button: {
+        marginBottom: 50
     }
 })
 
