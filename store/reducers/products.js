@@ -1,19 +1,24 @@
-import PRODUCTS from '../../data/dummy-data'
-import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../actions/products'
+// import PRODUCTS from '../../data/dummy-data'
+import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCTS } from '../actions/products'
 import Product from '../../models/product'
 
 const initState = {
-    availableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(p => p.ownerId === 'u1'),
+    availableProducts: [],
+    userProducts: [],
 }
 
 export default (state = initState, action) => {
     switch(action.type) {
+        case SET_PRODUCTS:
+            return {
+                availableProducts: action.payload,
+                userProducts: action.payload.filter(prod => prod.ownerId === 'u1')
+            }
         case DELETE_PRODUCT:
             return {
                 ...state,
                 availableProducts: state.availableProducts.filter(prod => prod.id !== action.payload),
-                userProducts: state.userProducts.filter(prod => prod.id !== action.payload)
+                userProducts: action.payload.filter(prod => prod.id !== action.payload)
             }
         case CREATE_PRODUCT:
             const newProduct = new Product(

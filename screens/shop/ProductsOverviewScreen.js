@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, Image, Platform, Button } from 'react-native'
 import { useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem'
@@ -8,11 +8,17 @@ import * as cartActions from '../../store/actions/cart'
 // import HeaderButton from '../UI/HeaderButton'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
+import * as productActions from '../../store/actions/products'
 
 const ProductsOverviewScreen = props => {
 
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
+
+    // dispatch will not change so the only time this will run is when the component is loaded
+    useEffect(() => {
+        dispatch(productActions.fetchProducts())
+    }, [dispatch])
 
     const selectItemHandler = (id, title) => {
         props.navigation.navigate('ProductDetail', {
