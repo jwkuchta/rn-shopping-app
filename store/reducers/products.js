@@ -17,7 +17,7 @@ export default (state = initState, action) => {
             }
         case CREATE_PRODUCT:
             const newProduct = new Product(
-                new Date().toString(),
+                action.payload.id,
                 'u1', // hardcoded for now til we have a database
                 action.payload.title, 
                 action.payload.imageUrl,
