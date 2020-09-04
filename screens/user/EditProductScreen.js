@@ -1,14 +1,16 @@
 import React, { useEffect, useCallback, useReducer } from 'react'
-import { View, Text, StyleSheet, TextInput, ScrollView, Platform, Alert } from 'react-native'
+import { View, StyleSheet, ScrollView, Platform, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
 import * as productActions from '../../store/actions/products'
 import Input from '../../components/UI/Input'
 
+const FORM_UPDATE = 'FORM_UPDATE'
+
 // build it outside the component to avoid unnecessary rebuilding 
 const formReducer = (state, action) => {
-    if (action.type === 'FORM_UPDATE') {
+    if (action.type === FORM_UPDATE) {
         const updatedValues = {
             ...state.inputValues, // from 27032
             [action.input]: action.value
@@ -81,52 +83,67 @@ const EditProductScreen = props => {
         props.navigation.setParams({ submit: submitHandler })
     }, [submitHandler])
 
-    const inputChangeHandler = (inputId, text) => {
-        let isValid = false
-        if (text.trim().length > 0) {
-            isValid = true
-        }
+    const inputChangeHandler = useCallback((inputId, inputValue, inputValid) => {
         dispatchFormState({ 
-            type: 'FORM_UPDATE', 
-            value: formState.inputValues[inputId],
-            isValid: true,
-            inputId: inputId
+            type: FORM_UPDATE, 
+            value: inputValue,
+            isValid: inputValid,
+            input: inputId
         })  
-    }
+    }, [ dispatchFormState ]) 
 
     return (
         <ScrollView>
             <View style={styles.form}>
                 <Input
+                id='title'
                 label="Title"
                 errorText="Please enter a valid title"
                 autoCapitalize="sentences" 
                 returnKeyType="next"
                 autoCorrect
+                returnKeyType="next"
+                onInputChange={inputChangeHandler}
+                initialValue={editedProd ? editedProd.title : ''}
+                initiallyValid={!!editedProd}
+                required
                 />
                 <Input
+                id='imageUrl'
                 label="Image Url"
                 errorText="Please enter a valid image URL"
                 autoCapitalize="sentences" 
                 returnKeyType="next"
-                autoCorrect
+                onInputChange={inputChangeHandler}
+                initialValue={editedProd ? editedProd.imageUrl : ''}
+                initiallyValid={!!editedProd}
+                required
                 />
                 {!editedProd && (
                     <Input
+                    id='price'
                     label="Price"
                     errorText="Please enter a valid price"
                     returnKeyType="next"
-                    autoCorrect
                     keyboardType="decimal-pad"
+                    onInputChange={inputChangeHandler}
+                    required
+                    min={0.1}
                     />
                 )}
                 <Input
+                id='description'
                 label="Peoduct Description"
                 errorText="Please enter a valid product description"
                 autoCapitalize="sentences" 
-                returnKeyType="next"
                 autoCorrect
+                multiline
                 numberOfLines={3}
+                onInputChange={inputChangeHandler}
+                initialValue={editedProd ? editedProd.description : ''}
+                initiallyValid={!!editedProd}
+                required
+                minLength={10}
                 />
             </View>   
         </ScrollView>  
@@ -139,7 +156,7 @@ EditProductScreen.navigationOptions = (navData) => {
         headerTitle: navData.navigation.getParam('id') ? 'Edit Product' : 'Add Product', 
         headerRight: () => (
             <Ionicons 
-                name={Platform.OS === 'android' ? 'md-save' : 'ios-save'} 
+                name={Platform.OS === 'android' ? 'md-checkmark' : 'ios-save'} 
                 // headerTitle='save'
                 // label='save'
                 size={23}

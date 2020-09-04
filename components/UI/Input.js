@@ -1,22 +1,44 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useEffect } from 'react'
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 
 const INPUT_CHANGE = 'INPUT_CHANGE'
-const inputReducer = (state, action) => {
-    if (action.type === INPUT_CHANGE) {
+const INPUT_BLUR = 'INPUT_BLUR'
 
+const inputReducer = (state, action) => {
+    switch (action.type) {
+        case INPUT_CHANGE:
+            return {
+                ...state,
+                value: action.value,
+                isValid: action.isValid
+            }
+        case INPUT_BLUR:
+            return {
+                ...state,
+                touched: true
+            }
+        default:
+            return state
     }
-    return state
 }
 
 const Input = props => {
-
+    
     const [ inputState, dispatchInput ] = useReducer(inputReducer, {
         value: props.initialValue ? props.initialValue : '',
         isValid: props.initiallyValid,
         touched: false
     })
 
+    const { onInputChange, id } = props
+
+    useEffect(() => {
+        if (inputState.touched) {
+            onInputChange(id, inputState.value, inputState.isValid)
+        }  
+    },  [ id, inputState, onInputChange ])
+
+    // input validation
     const textChangeHandler = text => {
         const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         let isValid = true
@@ -35,7 +57,11 @@ const Input = props => {
         if (props.minLength != null && text.length < props.minLength) {
             isValid = false;
         }
-        dispatchInput({ type: INPUT_CHANGE, value: text })
+        dispatchInput({ type: INPUT_CHANGE, value: text, isValid: isValid })
+    }
+
+    const lostFocusHandler = () => {
+        dispatchInput({ type: INPUT_BLUR })
     }
 
     return (
@@ -44,10 +70,11 @@ const Input = props => {
             <TextInput 
             {...props}
             style={styles.input} 
-            value={formState.inputValues.title}
-            onChangeText={() => inputChangeHandler('title')} 
+            value={inputState.value}
+            onChangeText={textChangeHandler} 
+            onBlur={lostFocusHandler}
             />
-            {!formState.inputValidities.title && <Text>Please enter a valid title</Text>}
+            {!inputState.isValid && <Text>Please enter a valid title</Text>}
         </View>
     )
 }
