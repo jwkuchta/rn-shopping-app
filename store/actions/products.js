@@ -5,12 +5,12 @@ export const SET_PRODUCTS = 'SET_PRODUCTS'
 
 import Product from '../../models/product'
 
-const baseApiUrl = 'https://rn-app-9a6c1.firebaseio.com/'
+const baseApiUrl = 'https://rn-app-9a6c1.firebaseio.com/products'
 
 export const fetchProducts = () => {
     return async dispatch => {
         try {
-            const response = await fetch(`${baseApiUrl}/products.json`)
+            const response = await fetch(`${baseApiUrl}.json`)
             if (!response.ok) {
                 throw new Error('Something went wrong')
             }
@@ -35,12 +35,16 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = productId => {
-    return { type: DELETE_PRODUCT, payload: productId }
+    console.log('in the delete product action')
+    return async dispatch => {
+        await fetch(`${baseApiUrl}/${prodId}.json`, { method: 'DELETE' })
+        dispatch({ type: DELETE_PRODUCT, payload: productId })
+    }  
 }
 
 export const createProduct = (title, imageUrl, description, price) => {
     return async dispatch => {
-        const response = await fetch(`${baseApiUrl}/products.json`, {
+        const response = await fetch(`${baseApiUrl}.json`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -67,7 +71,19 @@ export const createProduct = (title, imageUrl, description, price) => {
     }
 }
 
-export const updatedProduct = (prodId, title, imageUrl, description) => {
-    return { type: UPDATE_PRODUCT, payload: { prodId, title, imageUrl, description } }
+export const updateProduct = (prodId, title, imageUrl, description) => {
+    return async dispatch => {
+        await fetch(`${baseApiUrl}/${prodId}.json`, {
+            method: 'PATCH',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                title, imageUrl, description
+            })
+        })
+        dispatch({ type: UPDATE_PRODUCT, payload: { prodId, title, imageUrl, description }})
+    }
+    
 }
 

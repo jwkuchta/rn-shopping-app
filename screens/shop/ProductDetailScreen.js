@@ -17,7 +17,7 @@ const ProductDetailScreen = props => {
             <View style={styles.actions}>
                 <Button title='Add to Cart' onPress={() => dispatch(cartActions.addToCart(selectedProduct))} />
             </View>
-            <Text style={styles.price} >${selectedProduct.price.toFixed(2)}</Text>
+            <Text style={styles.price} >${selectedProduct.price}</Text>
             <Text style={styles.description} >{selectedProduct.description}</Text>
         </ScrollView>
     )

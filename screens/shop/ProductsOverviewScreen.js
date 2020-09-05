@@ -32,9 +32,20 @@ const ProductsOverviewScreen = props => {
     }, [ dispatch, setFetching, setFetchError ]) 
 
     // dispatch will not change so the only time this will run is when the component is loaded
+    // this is to fetch products initially
     useEffect(() => {
         fetchProducts()
     }, [dispatch, fetchProducts])
+
+    // after the initial render
+    useEffect(() => {
+        const willFocusSub = props.navigation.addListener('willFocus', fetchProducts)
+
+        // cleanup function
+        return () => {
+            willFocusSub.remove()
+        }
+    }, [fetchProducts])
 
     const selectItemHandler = (id, title) => {
         props.navigation.navigate('ProductDetail', {

@@ -15,6 +15,7 @@ export default (state = initState, action) => {
                 userProducts: action.payload.filter(prod => prod.ownerId === 'u1')
             }
         case DELETE_PRODUCT:
+            console.log('got to')
             return {
                 ...state,
                 availableProducts: state.availableProducts.filter(prod => prod.id !== action.payload),

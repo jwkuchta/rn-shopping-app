@@ -63,7 +63,7 @@ const EditProductScreen = props => {
             return
         }
         if (editedProd) {
-            dispatch(productActions.updatedProduct(
+            dispatch(productActions.updateProduct(
                 prodId, 
                 formState.inputValues.title, 
                 formState.inputValues.imageUrl, 
