@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, Image, Platform, Button } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
+import { View, Text, StyleSheet, FlatList, Image, Platform, Button, ActivityIndicator } from 'react-native'
 import { useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem'
 import { useDispatch } from 'react-redux'
@@ -15,10 +15,26 @@ const ProductsOverviewScreen = props => {
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
 
+    const [ fetching, setFetching ] = useState(false)
+    const [ fetchError, setFetchError ] = useState(null)
+
+    const fetchProducts = useCallback(() => {
+        setFetchError(null)
+        setFetching(true)
+        try {
+            setTimeout(() => {
+                dispatch(productActions.fetchProducts()).then(setFetching(false))
+            }, 2000)
+        } catch (error) {
+            setFetchError(error.message)
+            setFetching(false)
+        }
+    }, [ dispatch, setFetching, setFetchError ]) 
+
     // dispatch will not change so the only time this will run is when the component is loaded
     useEffect(() => {
-        dispatch(productActions.fetchProducts())
-    }, [dispatch])
+        fetchProducts()
+    }, [dispatch, fetchProducts])
 
     const selectItemHandler = (id, title) => {
         props.navigation.navigate('ProductDetail', {
@@ -50,16 +66,39 @@ const ProductsOverviewScreen = props => {
             </ProductItem>
         )
     }
+
+    if (fetching) {
+        return  (
+        <View style={styles.centered}>
+            <ActivityIndicator size='large' color={colors.primary} />
+        </View>)
+    }
+
+    if (!fetching && products.length === 0) {
+        return (
+            <View style={styles.centered}>
+                <Text>No items found</Text>
+                <Button title='Try Again' onPress={fetchProducts} />
+            </View>
+        )
+    }
+
+    if (fetchError) {
+        return (
+            <View style={styles.centered}>
+                <Text>There was an error: {fetchError}</Text>
+                <Button title='Try Again' onPress={fetchProducts} />
+            </View>
+        )
+    }
     return (
-        <View style={styles.screen}>
-            <FlatList 
+        <FlatList 
             data={products}
             keyExtractor={(item) => item.id}
             renderItem={renderProduct}
             // renderItem={itemData => <Text>{itemData.item.title}</Text>}
             style={{width: '100%'}}
-            />
-        </View>
+        />    
     )
 }
 
@@ -89,7 +128,7 @@ ProductsOverviewScreen.navigationOptions = (navData) => {
 }
 
 const styles = StyleSheet.create({
-    screen: {
+    centered: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
