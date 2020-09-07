@@ -9,10 +9,10 @@ export default ordersReducer = (state = initState, action) => {
     switch(action.type) {
         case ADD_ORDER:
             const newOrder = new Order(
-                new Date().toString(), // dummy id, later when we have backend it will be generated
+                action.payload.id, // dummy id, later when we have backend it will be generated
                 action.payload.items,
                 action.payload.total,
-                new Date()
+                action.payload.date
             )
             return {
                 ...state,
