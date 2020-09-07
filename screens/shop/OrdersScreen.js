@@ -1,12 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, StyleSheet, FlatList, Platform } from 'react-native'
 import { useSelector } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
+import colors from '../../constants/colors'
 import OrderItem from '../../components/shop/OrderItem'
+import { useDispatch } from 'react-redux'
+import { fetchOrders } from '../../store/actions/orders'
+
 
 const OrdersScreen = props => {
 
     const orders = useSelector(state => state.orders.orders)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchOrders)
+    }, [dispatch])
 
     return (
         <FlatList 
