@@ -16,25 +16,26 @@ const ProductsOverviewScreen = props => {
     const dispatch = useDispatch()
 
     const [ fetching, setFetching ] = useState(false)
+    const [ refreshing, setRefreshing ] = useState(false)
     const [ fetchError, setFetchError ] = useState(null)
 
-    const fetchProducts = useCallback(() => {
-        setFetchError(null)
-        setFetching(true)
+    const fetchProducts = useCallback(async () => {
+        setRefreshing(true)
         try {
-            setTimeout(() => {
+            await setTimeout(() => {
                 dispatch(productActions.fetchProducts()).then(setFetching(false))
             }, 2000)
         } catch (error) {
             setFetchError(error.message)
-            setFetching(false)
         }
+        setRefreshing(false)
     }, [ dispatch, setFetching, setFetchError ]) 
 
     // dispatch will not change so the only time this will run is when the component is loaded
     // this is to fetch products initially
     useEffect(() => {
-        fetchProducts()
+        setFetching(true)
+        fetchProducts().then(() => setFetching(false))
     }, [dispatch, fetchProducts])
 
     // after the initial render
@@ -104,6 +105,8 @@ const ProductsOverviewScreen = props => {
     }
     return (
         <FlatList 
+            onRefresh={fetchProducts} // products get fetched again when you pull down the screen
+            refreshing={refreshing}
             data={products}
             keyExtractor={(item) => item.id}
             renderItem={renderProduct}

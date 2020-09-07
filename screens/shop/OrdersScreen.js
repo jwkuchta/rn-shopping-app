@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Text, View, StyleSheet, FlatList, Platform } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, StyleSheet, FlatList, Platform , ActivityIndicator} from 'react-native'
 import { useSelector } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
@@ -10,13 +10,23 @@ import { fetchOrders } from '../../store/actions/orders'
 
 const OrdersScreen = props => {
 
-    const orders = useSelector(state => state.orders.orders)
+    const [ isLoading, setIsLoading ] = useState()
 
+    const orders = useSelector(state => state.orders.orders)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fetchOrders)
+        setIsLoading(true)
+        dispatch(fetchOrders).then(() => setIsLoading(false))
     }, [dispatch])
+
+    if (isLoading) {
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size='large' color={colors.primary} />
+            </View>
+        )
+    }
 
     return (
         <FlatList 
@@ -54,5 +64,9 @@ OrdersScreen.navigationOptions = (navData) => {
 export default OrdersScreen
 
 const style = StyleSheet.create({
-
+    centered: {
+        flex: 1,
+        justifyContent: 'center', 
+        alignItems: 'center'
+    }
 })
