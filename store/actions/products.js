@@ -37,7 +37,10 @@ export const fetchProducts = () => {
 export const deleteProduct = productId => {
     console.log('in the delete product action')
     return async dispatch => {
-        await fetch(`${baseApiUrl}/${prodId}.json`, { method: 'DELETE' })
+        const response = await fetch(`${baseApiUrl}/${productId}.json`, { method: 'DELETE' })
+        if (!response.ok) {
+            throw new Error('Something went wrong!')
+        }
         dispatch({ type: DELETE_PRODUCT, payload: productId })
     }  
 }
@@ -56,6 +59,9 @@ export const createProduct = (title, imageUrl, description, price) => {
                 price
             })
         })
+        if (!response.ok) {
+            throw new Error('Something went wrong!')
+        }
         const data = await response.json()
         console.log('response data', data)
         dispatch({ 
@@ -73,7 +79,7 @@ export const createProduct = (title, imageUrl, description, price) => {
 
 export const updateProduct = (prodId, title, imageUrl, description) => {
     return async dispatch => {
-        await fetch(`${baseApiUrl}/${prodId}.json`, {
+        const response = await fetch(`${baseApiUrl}/${prodId}.json`, {
             method: 'PATCH',
             headers: {
                 'content-type': 'application/json'
@@ -82,6 +88,10 @@ export const updateProduct = (prodId, title, imageUrl, description) => {
                 title, imageUrl, description
             })
         })
+
+        if (!response.ok) {
+            throw new Error('Something went wrong!')
+        }
         dispatch({ type: UPDATE_PRODUCT, payload: { prodId, title, imageUrl, description }})
     }
     

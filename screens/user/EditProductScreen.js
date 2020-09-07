@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback, useReducer } from 'react'
-import { View, StyleSheet, ScrollView, Platform, Alert, KeyboardAvoidingView } from 'react-native'
+import React, { useEffect, useCallback, useReducer, useState } from 'react'
+import { View, StyleSheet, ScrollView, Platform, Alert, ActivityIndicator } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
@@ -34,13 +34,15 @@ const formReducer = (state, action) => {
 
 const EditProductScreen = props => {
 
+    const [ isLoading, setIsLoading ] = useState(false)
+    const [ error, setError ] = useState(null)
+
     const prodId = props.navigation.getParam('id')
     const editedProd = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId))
 
     const dispatch = useDispatch()
 
-    // useReducer helps with state management when you have a lot of local state to manage
-    // replaces useState()
+    // useReducer helps with state management when you have a lot of local state to manage and replaces useState()
     const [ formState, dispatchFormState ] = useReducer(formReducer, {
         inputValues: {
             title: editedProd ? editedProd.title : '',
@@ -57,25 +59,39 @@ const EditProductScreen = props => {
         formIsValid: editedProd ? true : false
     })
 
-    const submitHandler = useCallback(() => {
+    useEffect(() => {
+        if (error) {
+            Alert.alert('an error occured', error, [{text: 'okay'}])
+        }
+    }, [error])
+
+    const submitHandler = useCallback(async () => {
         if (!formState.formIsValid) {
             Alert.alert('Invalid title', 'Please submit a valid title', [{ text: 'Ok'}])
             return
         }
-        if (editedProd) {
-            dispatch(productActions.updateProduct(
-                prodId, 
-                formState.inputValues.title, 
-                formState.inputValues.imageUrl, 
-                formState.inputValues.description
-                ))
-        } else {
-            dispatch(productActions.createProduct(
-                formState.inputValues.title, 
-                formState.inputValues.imageUrl, 
-                formState.inputValues.description, 
-                +formState.inputValues.price))
-        }
+        setIsLoading(true)
+        setError(null)
+        try {
+            if (editedProd) {
+                await dispatch(productActions.updateProduct(
+                    prodId, 
+                    formState.inputValues.title, 
+                    formState.inputValues.imageUrl, 
+                    formState.inputValues.description
+                    ))
+            } else {
+                await dispatch(productActions.createProduct(
+                    formState.inputValues.title, 
+                    formState.inputValues.imageUrl, 
+                    formState.inputValues.description, 
+                    +formState.inputValues.price))
+            }
+            props.navigation.goBack()
+        } catch (error) {
+            setError(err.message)
+        }   
+        setIsLoading(false)
         props.navigation.goBack()
     }, [ dispatch, prodId, formState ])
 
@@ -91,6 +107,14 @@ const EditProductScreen = props => {
             input: inputId
         })  
     }, [ dispatchFormState ]) 
+
+    if (isLoading) {
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size='large' color={colors.primary} />
+            </View>
+        )
+    }
 
     return (
         // <KeyboardAvoidingView
@@ -177,6 +201,11 @@ EditProductScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     form: {
         margin: 20
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center', 
+        alignItems: 'center'
     }
 })
 
