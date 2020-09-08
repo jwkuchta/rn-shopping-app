@@ -8,7 +8,8 @@ import Product from '../../models/product'
 const baseApiUrl = 'https://rn-app-9a6c1.firebaseio.com/products'
 
 export const fetchProducts = () => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
+        const userId = getState().auth.userId
         try {
             const response = await fetch(`${baseApiUrl}.json`)
             if (!response.ok) {
@@ -19,24 +20,30 @@ export const fetchProducts = () => {
             for (let key in data) {
                 products.push(new Product(
                     key, 
-                    'u1',
+                    userId,
                     data[key].title,
                     data[key].imageUrl,
                     data[key].description,
                     data[key].price
                 ))
             }
-            dispatch({ type: SET_PRODUCTS, payload: products })
+            dispatch({ 
+                type: SET_PRODUCTS, 
+                payload: {
+                    products: products,
+                    userProducts: products.filter(prod => prod.ownerId === userId)
+                }  
+            })
         } catch (error) {
             throw error
-        }
-        
+        }   
     }
 }
 
 export const createProduct = (title, imageUrl, description, price) => {
     return async (dispatch, getState) => {
         const token = getState().auth.token
+        const userId = getState().auth.userId
         const response = await fetch(`${baseApiUrl}.json?auth=${token}`, {
             method: 'POST',
             headers: {
@@ -46,7 +53,8 @@ export const createProduct = (title, imageUrl, description, price) => {
                 title,
                 imageUrl,
                 description,
-                price
+                price,
+                ownerId: userId
             })
         })
         if (!response.ok) {
@@ -60,7 +68,8 @@ export const createProduct = (title, imageUrl, description, price) => {
                 title, 
                 imageUrl, 
                 description, 
-                price 
+                price,
+                ownerId: userId
             } 
         })
     }
