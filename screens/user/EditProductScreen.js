@@ -74,7 +74,6 @@ const EditProductScreen = props => {
         setError(null)
         try {
             if (editedProd) {
-                console.log('line 77', editedProd, formState)
                 await dispatch(productActions.updateProduct(
                     prodId, 
                     formState.inputValues.title, 
@@ -104,7 +103,6 @@ const EditProductScreen = props => {
 
     const inputChangeHandler = useCallback(
         (inputIdentifier, inputValue, inputValidity) => {
-            console.log('line 107 input value', inputValue)
             dispatchFormState({
                 type: FORM_UPDATE,
                 value: inputValue,

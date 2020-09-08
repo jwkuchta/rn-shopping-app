@@ -77,10 +77,8 @@ export const createProduct = (title, imageUrl, description, price) => {
 
 //  getState() gives access to the full Redux store from within the action!
 export const updateProduct = (prodId, title, imageUrl, description) => {
-    console.log('in the update product action', prodId, title, imageUrl, description)
     return async (dispatch, getState) => {
         const token = getState().auth.token
-        console.log('UPDATED PRODUCT ACTION AUTH TOKEN', token)
         // we can now add this token to our patch request so firebase allows the update
         const response = await fetch(`${baseApiUrl}/${prodId}.json?auth=${token}`, {
             method: 'PATCH',
@@ -94,7 +92,6 @@ export const updateProduct = (prodId, title, imageUrl, description) => {
             })
         })
         const resData = await response.json()
-        console.log('UPDATED PRODUCT DATA FROM FIREBASE', resData.title)
         // had to comment it out cause the dispatch was not rea
         // if (!response.ok) {
         //     throw new Error('Something went wrong!')

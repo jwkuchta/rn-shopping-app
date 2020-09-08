@@ -13,6 +13,7 @@ import * as productActions from '../../store/actions/products'
 const ProductsOverviewScreen = props => {
 
     const products = useSelector(state => state.products.availableProducts)
+    console.log('PRODUCTSSSSSSSSSSS: ', products)
     const dispatch = useDispatch()
 
     const [ fetching, setFetching ] = useState(false)
@@ -79,6 +80,14 @@ const ProductsOverviewScreen = props => {
         )
     }
 
+    if (products.length === 0) {
+        return (
+            <View style={styles.centered}>
+                <Text>No products yet</Text>
+            </View>
+        )
+    }
+
     if (fetching) {
         return  (
         <View style={styles.centered}>
@@ -103,6 +112,7 @@ const ProductsOverviewScreen = props => {
             </View>
         )
     }
+
     return (
         <FlatList 
             onRefresh={fetchProducts} // products get fetched again when you pull down the screen

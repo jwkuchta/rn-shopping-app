@@ -11,7 +11,7 @@ const OrderItem = props => {
     return (
         <Card style={styles.orderItem}>
             <View style={styles.summary}>
-                <Text style={styles.total}>{props.total.toFixed(2)}</Text>
+                <Text style={styles.total}>{props.total}</Text>
                 <Text style={styles.date}>{props.date}</Text>
             </View>
             <Button 

@@ -11,14 +11,14 @@ export default (state = initState, action) => {
     switch(action.type) {
         case SET_PRODUCTS:
             return {
-                availableProducts: action.payload,
+                availableProducts: action.payload.products,
                 userProducts: action.payload.userProducts
             }
         case DELETE_PRODUCT:
             return {
                 ...state,
                 availableProducts: state.availableProducts.filter(prod => prod.id !== action.payload),
-                userProducts: action.payload.filter(prod => prod.id !== action.payload)
+                userProducts: state.userProducts.filter(prod => prod.id !== action.payload)
             }
         case CREATE_PRODUCT:
             const newProduct = new Product(

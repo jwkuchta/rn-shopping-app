@@ -49,7 +49,6 @@ export const addOrder = (cartItems, totalAmount) => {
             })
         })
         if (!response.ok) {
-            console.log('what went wrong: ', response.json())
             throw new Error('Something went wrong!')
         }
         const data = await response.json()

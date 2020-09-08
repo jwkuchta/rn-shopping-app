@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Platform, Button, Alert } from 'react-native'
+import { FlatList, Platform, Button, Alert, View, Text, StyleSheet } from 'react-native'
 import ProductItem from '../../components/shop/ProductItem'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
@@ -26,6 +26,13 @@ const UserProductsScreen = props => {
         )
     }
 
+    if (userProducts.length === 0) {
+        return (
+            <View style={styles.centered}>
+                <Text>No products to show yet</Text>
+            </View>
+        )
+    }
     return (
         <FlatList 
         data={userProducts}
@@ -77,5 +84,13 @@ UserProductsScreen.navigationOptions = (navData) => {
     }
     
 }
+
+const styles = StyleSheet.create({
+    centered: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 export default UserProductsScreen
