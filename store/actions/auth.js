@@ -1,9 +1,20 @@
 export const SIGNUP = 'SIGNUP'
 export const LOGIN = 'LOGIN'
+export const AUTHENTICATE = 'AUTHENTICATE'
+
 import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
+
+import { AsyncStorage } from 'react-native' // can be used to save data on the device (like the token)
 
 const authSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`
 const authLoginUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
+
+export const authenticate = (userId, token) => {
+    return { type: AUTHENTICATE, payload: {
+        userId: userId,
+        token: token
+    }}
+}
 
 export const signup = (email, password) => {
     return async dispatch => {
@@ -28,8 +39,14 @@ export const signup = (email, password) => {
             throw new Error(message);
         }
         const resData = await response.json()
+        // dispatch({ 
+        //     type: SIGNUP, payload: {
+        //         token: resData.idToken,
+        //         userId: resData.localId
+        //     } 
+        // })
         dispatch({ 
-            type: SIGNUP, payload: {
+            type: AUTHENTICATE, payload: {
                 token: resData.idToken,
                 userId: resData.localId
             } 
@@ -62,12 +79,29 @@ export const login = (email, password) => {
         throw new Error(message)
         }
         const resData = await response.json()
+        // dispatch({ 
+        //     type: LOGIN, payload: {
+        //         token: resData.idToken,
+        //         userId: resData.localId
+        //     } 
+        // })
         dispatch({ 
-            type: LOGIN, payload: {
+            type: AUTHENTICATE, payload: {
                 token: resData.idToken,
                 userId: resData.localId
             } 
         })
+        // after we dispatch login, we save the token
+        const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
+        saveToken(resData.idToken, resData.localId, expirationDate)
     }
+}
+
+const saveToken = (token, userId, expDate) => {
+    AsyncStorage.setItem('userData', JSON.stringify({ // the second argument has to be a string
+        token: token,
+        userId: userId,
+        tokenExpirationDate: expDate.toISOString()
+    }))
 }
 

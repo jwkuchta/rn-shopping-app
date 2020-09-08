@@ -20,7 +20,7 @@ export const fetchProducts = () => {
             for (let key in data) {
                 products.push(new Product(
                     key, 
-                    userId,
+                    data[key].ownerId,
                     data[key].title,
                     data[key].imageUrl,
                     data[key].description,
