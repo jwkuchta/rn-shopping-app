@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import productsReducer from './store/reducers/products'
@@ -11,11 +10,13 @@ import * as Font from 'expo-font'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import ordersReducer from './store/reducers/orders'
 import ReduxThunk from 'redux-thunk'
+import authReducer from './store/reducers/auth'
 
 const rootReducer = combineReducers({
   products: productsReducer,
   carts: cartsReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  auth: authReducer
 })
                                       // remove when ready for deployment
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk)) 

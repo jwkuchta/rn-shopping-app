@@ -35,9 +35,12 @@ export default (state = initState, action) => {
                 userProducts: state.userProducts.concat(newProduct)
             }
         case UPDATE_PRODUCT:
-            const prodIndexUser = state.userProducts.findIndex(prod => prod.id === 'p1')
-            // console.log(action.payload.prodId, state.userProducts, prodIndexUser, state.userProducts[prodIndexUser])
+            console.log('In the update product reducer!!!!!!!!!!!$$$$$$$$$$$$')
+            console.log('STATE IN THE PRODUCTS REDUCER', state)
+            // const index = Data.map(e => e.name).indexOf('Nick')
+            const prodIndexUser = state.userProducts.findIndex(prod => prod.id === action.payload.prodId)
             const prodIndexAvilable = state.availableProducts.findIndex(prod => prod.id === action.payload.prodId)
+            console.log('UPDATE PRODUCT ACTION PAYLOAD', state.availableProducts, prodIndexUser)
             const updatedProduct = new Product (
                 action.payload.prodId,
                 state.userProducts[prodIndexUser].ownerId,

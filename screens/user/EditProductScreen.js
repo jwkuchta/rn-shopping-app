@@ -12,7 +12,7 @@ const FORM_UPDATE = 'FORM_UPDATE'
 const formReducer = (state, action) => {
     if (action.type === FORM_UPDATE) {
         const updatedValues = {
-            ...state.inputValues, // from 27032
+            ...state.inputValues, // from 27-32
             [action.input]: action.value
         }
         const updatedInputValidities = {
@@ -61,7 +61,7 @@ const EditProductScreen = props => {
 
     useEffect(() => {
         if (error) {
-            Alert.alert('an error occured', error, [{text: 'okay'}])
+            Alert.alert('error in edit product screen', error, [{text: 'okay'}])
         }
     }, [error])
 
@@ -74,6 +74,7 @@ const EditProductScreen = props => {
         setError(null)
         try {
             if (editedProd) {
+                console.log('line 77', editedProd, formState)
                 await dispatch(productActions.updateProduct(
                     prodId, 
                     formState.inputValues.title, 
@@ -88,25 +89,31 @@ const EditProductScreen = props => {
                     +formState.inputValues.price))
             }
             props.navigation.goBack()
-        } catch (error) {
+        } catch (err) {
             setError(err.message)
+            // why can't error be set here ???
+            // Alert.alert('ERROR IN THE EDIT PRODUCT SCREEN', error, [{text: 'okay'}])
+            // setError(null)
         }   
         setIsLoading(false)
-        props.navigation.goBack()
     }, [ dispatch, prodId, formState ])
 
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler })
     }, [submitHandler])
 
-    const inputChangeHandler = useCallback((inputId, inputValue, inputValid) => {
-        dispatchFormState({ 
-            type: FORM_UPDATE, 
-            value: inputValue,
-            isValid: inputValid,
-            input: inputId
-        })  
-    }, [ dispatchFormState ]) 
+    const inputChangeHandler = useCallback(
+        (inputIdentifier, inputValue, inputValidity) => {
+            console.log('line 107 input value', inputValue)
+            dispatchFormState({
+                type: FORM_UPDATE,
+                value: inputValue,
+                isValid: inputValidity,
+                input: inputIdentifier
+            })
+        },
+        [dispatchFormState]
+    )
 
     if (isLoading) {
         return (

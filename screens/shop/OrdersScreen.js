@@ -7,7 +7,6 @@ import OrderItem from '../../components/shop/OrderItem'
 import { useDispatch } from 'react-redux'
 import { fetchOrders } from '../../store/actions/orders'
 
-
 const OrdersScreen = props => {
 
     const [ isLoading, setIsLoading ] = useState()
@@ -17,7 +16,7 @@ const OrdersScreen = props => {
 
     useEffect(() => {
         setIsLoading(true)
-        dispatch(fetchOrders).then(() => setIsLoading(false))
+        dispatch(fetchOrders()).then(() => setIsLoading(false))
     }, [dispatch])
 
     if (isLoading) {
@@ -56,17 +55,17 @@ OrdersScreen.navigationOptions = (navData) => {
                 color={Platform.OS === 'android' ? 'white' : colors.primary}
                 onPress={() => navData.navigation.toggleDrawer()}
             />
-        ),
-    }
-    
+        )
+    } 
 }
 
 export default OrdersScreen
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     centered: {
         flex: 1,
         justifyContent: 'center', 
         alignItems: 'center'
     }
 })
+

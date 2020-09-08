@@ -34,28 +34,18 @@ export const fetchProducts = () => {
     }
 }
 
-export const deleteProduct = productId => {
-    console.log('in the delete product action')
-    return async dispatch => {
-        const response = await fetch(`${baseApiUrl}/${productId}.json`, { method: 'DELETE' })
-        if (!response.ok) {
-            throw new Error('Something went wrong!')
-        }
-        dispatch({ type: DELETE_PRODUCT, payload: productId })
-    }  
-}
-
 export const createProduct = (title, imageUrl, description, price) => {
-    return async dispatch => {
-        const response = await fetch(`${baseApiUrl}.json`, {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token
+        const response = await fetch(`${baseApiUrl}.json?auth=${token}`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
                 title,
-                description,
                 imageUrl,
+                description,
                 price
             })
         })
@@ -63,7 +53,6 @@ export const createProduct = (title, imageUrl, description, price) => {
             throw new Error('Something went wrong!')
         }
         const data = await response.json()
-        console.log('response data', data)
         dispatch({ 
             type: CREATE_PRODUCT, 
             payload: { 
@@ -77,23 +66,50 @@ export const createProduct = (title, imageUrl, description, price) => {
     }
 }
 
+//  getState() gives access to the full Redux store from within the action!
 export const updateProduct = (prodId, title, imageUrl, description) => {
-    return async dispatch => {
-        const response = await fetch(`${baseApiUrl}/${prodId}.json`, {
+    console.log('in the update product action', prodId, title, imageUrl, description)
+    return async (dispatch, getState) => {
+        const token = getState().auth.token
+        console.log('UPDATED PRODUCT ACTION AUTH TOKEN', token)
+        // we can now add this token to our patch request so firebase allows the update
+        const response = await fetch(`${baseApiUrl}/${prodId}.json?auth=${token}`, {
             method: 'PATCH',
             headers: {
                 'content-type': 'application/json'
             },
             body: JSON.stringify({
-                title, imageUrl, description
+                title: title, 
+                imageUrl: imageUrl, 
+                description: description
             })
         })
+        const resData = await response.json()
+        console.log('UPDATED PRODUCT DATA FROM FIREBASE', resData.title)
+        // had to comment it out cause the dispatch was not rea
+        // if (!response.ok) {
+        //     throw new Error('Something went wrong!')
+        // } 
+        dispatch({ 
+            type: UPDATE_PRODUCT, 
+            payload: { 
+                prodId: prodId, 
+                title: resData.title, 
+                imageUrl: resData.imageUrl, 
+                description: resData.description 
+            }
+        })
+    }    
+}
 
+export const deleteProduct = productId => {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token
+        const response = await fetch(`${baseApiUrl}/${productId}.json?auth=${token}`, { method: 'DELETE' })
         if (!response.ok) {
             throw new Error('Something went wrong!')
         }
-        dispatch({ type: UPDATE_PRODUCT, payload: { prodId, title, imageUrl, description }})
-    }
-    
+        dispatch({ type: DELETE_PRODUCT, payload: productId })
+    }  
 }
 
