@@ -1,6 +1,7 @@
 export const SIGNUP = 'SIGNUP'
 export const LOGIN = 'LOGIN'
 export const AUTHENTICATE = 'AUTHENTICATE'
+export const LOGOUT = 'LOGOUT'
 
 import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
 
@@ -95,6 +96,10 @@ export const login = (email, password) => {
         const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
         saveToken(resData.idToken, resData.localId, expirationDate)
     }
+}
+
+export const logout = () => {
+    return { type: LOGOUT }
 }
 
 const saveToken = (token, userId, expDate) => {

@@ -29,6 +29,7 @@ const CartScreen = props => {
     })
 
     const addOrderHandler = async () => {
+        console.log('IN THE ADD ORDER HANDLER!!!!!!!!!!')
         setIsLoading(true)
         await dispatch(orderActions.addOrder(cartItems, cartTotal))
         setIsLoading(false)

@@ -12,6 +12,7 @@ const OrdersScreen = props => {
     const [ isLoading, setIsLoading ] = useState()
 
     const orders = useSelector(state => state.orders.orders)
+    console.log('ORDERS IN THE ORDERS SCREEN: ', orders)
     const dispatch = useDispatch()
 
     useEffect(() => {
