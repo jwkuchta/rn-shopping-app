@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
 import CartItem from '../shop/CartItem'
-import colors from '../../constants/colors'
+import Colors from '../../constants/Colors'
 import Card from '../UI/Card'
 
 const OrderItem = props => {
@@ -15,7 +15,7 @@ const OrderItem = props => {
                 <Text style={styles.date}>{props.date}</Text>
             </View>
             <Button 
-            color={colors.primary} 
+            color={Colors.primary} 
             title={showDetails ? 'Hide Details' : 'Show Details'}
             onPress={() => setShowDetails(!showDetails)} 
             />

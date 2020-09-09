@@ -7,7 +7,7 @@ import * as cartActions from '../../store/actions/cart'
 // import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 // import HeaderButton from '../UI/HeaderButton'
 import { Ionicons } from '@expo/vector-icons'
-import colors from '../../constants/colors'
+import Colors from '../../constants/Colors'
 import * as productActions from '../../store/actions/products'
 import { AsyncStorage } from 'react-native'
 
@@ -21,11 +21,10 @@ const ProductsOverviewScreen = props => {
     const [ fetchError, setFetchError ] = useState(null)
 
     const fetchProducts = useCallback(async () => {
+        setFetchError(null)
         setRefreshing(true)
         try {
-            await setTimeout(() => {
-                dispatch(productActions.fetchProducts()).then(setFetching(false))
-            }, 2000)
+            await dispatch(productActions.fetchProducts())
         } catch (error) {
             setFetchError(error.message)
         }
@@ -68,13 +67,13 @@ const ProductsOverviewScreen = props => {
                 style={styles.button}
                 title='view details' 
                 onPress={() => selectItemHandler(product.item.id, product.item.title)} 
-                color={colors.primary}
+                color={Colors.primary}
                 />
                 <Button 
                 style={styles.button}
                 title='add to cart' 
                 onPress={() => dispatch(cartActions.addToCart(product.item))} 
-                color={colors.primary} 
+                color={Colors.primary} 
                 />
             </ProductItem>
         )
@@ -91,7 +90,7 @@ const ProductsOverviewScreen = props => {
     if (fetching) {
         return  (
         <View style={styles.centered}>
-            <ActivityIndicator size='large' color={colors.primary} />
+            <ActivityIndicator size='large' color={Colors.primary} />
         </View>)
     }
 
@@ -134,7 +133,7 @@ ProductsOverviewScreen.navigationOptions = (navData) => {
                 name={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} 
                 size={23}
                 style={{marginLeft: 15}}
-                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                color={Platform.OS === 'android' ? 'white' : Colors.primary}
                 onPress={() => navData.navigation.toggleDrawer()}
             />
         ),
@@ -143,7 +142,7 @@ ProductsOverviewScreen.navigationOptions = (navData) => {
                 name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} 
                 size={23}
                 style={{marginRight: 15}}
-                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                color={Platform.OS === 'android' ? 'white' : Colors.primary}
                 onPress={() => navData.navigation.navigate('Cart')}
             />
         )

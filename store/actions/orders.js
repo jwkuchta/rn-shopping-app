@@ -33,11 +33,9 @@ export const fetchOrders = () => {
 }
 
 export const addOrder = (cartItems, totalAmount) => {
-    console.log('IN THE ADD ORDER ACTION@@@@@@@@@@@@@@@@@@@')
     return async (dispatch, getState) => {
         const token = getState().auth.token
         const userId = getState().auth.userId
-        console.log('TOKEN AND USER ID IN THE ADD ORDER ACTION: ', token, userId)
         const date = new Date()
         const response = await fetch(`${baseApiUrl}/${userId}.json?auth=${token}`, {
             method: 'POST',

@@ -6,11 +6,10 @@ export const LOGOUT = 'LOGOUT'
 let timer
 
 import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
-
-import { AsyncStorage } from 'react-native' // can be used to save data on the device (like the token)
-
 const authSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`
 const authLoginUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
+
+import { AsyncStorage } from 'react-native' // can be used to save data on the device (like the token)
 
 export const authenticate = (userId, token, tokenExpTime) => {
     return dispatch => {
@@ -48,7 +47,6 @@ export const signup = (email, password) => {
             throw new Error(message);
         }
         const resData = await response.json()
-        console.log('RES DATA FROM SIGNUP ACTION: ', resData)
         dispatch(authenticate(
             resData.localId,
             resData.idToken,
@@ -62,7 +60,8 @@ export const signup = (email, password) => {
 
 export const login = (email, password) => {
     return async dispatch => {
-        const response = await fetch(authLoginUrl, {
+        const response = await fetch(
+          authLoginUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -88,7 +87,7 @@ export const login = (email, password) => {
         dispatch(
             authenticate(
                 resData.localId, 
-                resData.token, 
+                resData.idToken, 
                 parseInt(resData.expiresIn) * 1000
             )
         )
@@ -99,11 +98,12 @@ export const login = (email, password) => {
 }
 
 export const logout = () => {
-    console.log('IN THE LOGOUT ACTION')
-    clearLogoutTimer()
-    // AsyncStorage.removeItem('userData') ???
-    AsyncStorage.removeItem('')
-    return { type: LOGOUT }
+    return async dispatch => {
+        await clearLogoutTimer()
+        await AsyncStorage.removeItem('userData')
+        // await AsyncStorage.clear()
+        dispatch({ type: LOGOUT }) 
+    }
 }
 
 const clearLogoutTimer = () => {
@@ -112,19 +112,11 @@ const clearLogoutTimer = () => {
     }
 }
 
-// const setLogoutTimer = tokenExpTime => {
-//     return dispatch => {
-//         timer = setTimeout(() => {
-//             dispatch(logout())
-//         }, tokenExpTime)
-//     } 
-// }
-
 const setLogoutTimer = tokenExpTime => {
     return dispatch => {
         timer = setTimeout(() => {
             dispatch(logout())
-        }, 5000)
+        }, tokenExpTime)
     } 
 }
 
@@ -135,4 +127,10 @@ const saveDataToStorage = (token, userId, expDate) => {
         tokenExpDate: expDate.toISOString()
     }))
 }
+
+// import { AsyncStorage } from 'react-native';
+
+// import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
+// const authSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`
+// const authLoginUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
 

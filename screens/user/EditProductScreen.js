@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useReducer, useState } from 'react'
 import { View, StyleSheet, ScrollView, Platform, Alert, ActivityIndicator } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
-import colors from '../../constants/colors'
+import Colors from '../../constants/Colors'
 import * as productActions from '../../store/actions/products'
 import Input from '../../components/UI/Input'
 
@@ -116,7 +116,7 @@ const EditProductScreen = props => {
     if (isLoading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size='large' color={colors.primary} />
+                <ActivityIndicator size='large' color={Colors.primary} />
             </View>
         )
     }
@@ -196,7 +196,7 @@ EditProductScreen.navigationOptions = (navData) => {
                 // label='save'
                 size={23}
                 style={{marginRight: 15}}
-                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                color={Platform.OS === 'android' ? 'white' : Colors.primary}
                 onPress={submit}
             />
         )

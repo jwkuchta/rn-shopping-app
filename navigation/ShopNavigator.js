@@ -1,10 +1,10 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'
+import { createSwitchNavigator, createAppContainer } from 'react-navigation'
 // import { createTabsNavigator } from 'react-navigation-tabs'
-import { createAppContainer } from 'react-navigation'
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen'
-import colors from '../constants/colors'
+import Colors from '../constants/Colors'
 import { Platform, SafeAreaView, Button, View } from 'react-native'
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen'
 import CartScreen from '../screens/shop/CartScreen'
@@ -12,7 +12,7 @@ import OrdersScreen from '../screens/shop/OrdersScreen'
 import { Ionicons } from '@expo/vector-icons'
 import UserProductsScreen from '../screens/user/UserProductScreen'
 import EditProductScreen from '../screens/user/EditProductScreen'
-import { createSwitchNavigator } from 'react-navigation'
+
 import AuthScreen from '../screens/user/AuthScreen'
 import StartupScreen from '../screens/StartupScreen'
 import { useDispatch } from 'react-redux'
@@ -20,9 +20,9 @@ import { logout } from '../store/actions/auth'
 
 const defaultNavOptions = {
     headerStyle: {
-        backgroundColor: Platform.OS === 'android' ? colors.primary : ''
+        backgroundColor: Platform.OS === 'android' ? Colors.primary : ''
     },
-    headerTintColor: Platform.OS === 'android' ? 'white' : colors.primary,
+    headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
     headerTitleStyle: {
         fontFamily: 'open-sans-bold'
     },
@@ -88,7 +88,7 @@ const ShopNavigator = createDrawerNavigator({
     Admin: AdminNavigator
 }, {
     contentOptions: {
-        activeTintColor: colors.primary
+        activeTintColor: Colors.primary
     },
     // allows you to add a custom button to the drawer
     // this is a react componrnt and we can use useDispatch to dispatch the logout action from it
@@ -100,9 +100,8 @@ const ShopNavigator = createDrawerNavigator({
                     <DrawerItems {...props} />
                     <Button 
                     title="Logout" 
-                    color={colors.primary} 
+                    color={Colors.primary} 
                     onPress={() => {
-                        console.log('PRESSED THE  BUTTON IN THE DRAWERS')
                         dispatch(logout())
                         // we are now clearing the store and navigating away in ShopNavigator
                         // props.navigation.navigate('Auth')
@@ -128,3 +127,4 @@ const MainNavigator = createSwitchNavigator({
 })
 
 export default createAppContainer(MainNavigator)
+

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, ActivityIndicator, AsyncStorage, StyleSheet } from 'react-native'
-import colors from '../constants/colors'
+import Colors from '../constants/Colors'
 import { useDispatch } from 'react-redux'
 import { authenticate } from '../store/actions/auth'
 
@@ -12,13 +12,11 @@ const StartupScreen = props => {
         // check for valid token
         const tryLogin = async () => {
             const userData = await AsyncStorage.getItem('userData')
-            console.log('USER DATA FROM THE STARTUP SCREEN', userData)
             if (!userData) {
                 props.navigation.navigate('Auth')
                 return
             }
             const parsedData = JSON.parse(userData)
-            console.log('USER DATA IN THE STARTUP SCREEN', parsedData)
             const { token, userId, tokenExpDate } = parsedData
             const expirationDate = new Date(tokenExpDate)
 
@@ -36,7 +34,7 @@ const StartupScreen = props => {
 
     return (
         <View>
-            <ActivityIndicator size='large' color={colors.primary}/>
+            <ActivityIndicator size='large' color={Colors.primary}/>
         </View>
     )
 }

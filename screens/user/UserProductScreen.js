@@ -3,7 +3,7 @@ import { FlatList, Platform, Button, Alert, View, Text, StyleSheet } from 'react
 import ProductItem from '../../components/shop/ProductItem'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons'
-import colors from '../../constants/colors'
+import Colors from '../../constants/Colors'
 import { deleteProduct } from '../../store/actions/products'
 
 
@@ -47,12 +47,12 @@ const UserProductsScreen = props => {
                 <Button 
                 title='Edit' 
                 onPress={() => productHandler(itemData.item.id)} 
-                color={colors.primary}
+                color={Colors.primary}
                 />
                 <Button 
                 title='Delete' 
                 onPress={() => deleteHandler(itemData.item.id)} 
-                color={colors.primary} 
+                color={Colors.primary} 
                 />
             </ProductItem>
         )}
@@ -68,7 +68,7 @@ UserProductsScreen.navigationOptions = (navData) => {
                 name={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} 
                 size={23}
                 style={{marginLeft: 15}}
-                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                color={Platform.OS === 'android' ? 'white' : Colors.primary}
                 onPress={() => navData.navigation.toggleDrawer()}
             />
         ),
@@ -77,7 +77,7 @@ UserProductsScreen.navigationOptions = (navData) => {
                 name={Platform.OS === 'android' ? 'md-create' : 'ios-create'} 
                 size={23}
                 style={{marginRight: 15}}
-                color={Platform.OS === 'android' ? 'white' : colors.primary}
+                color={Platform.OS === 'android' ? 'white' : Colors.primary}
                 onPress={() => navData.navigation.navigate('EditProduct')}
             />
         )

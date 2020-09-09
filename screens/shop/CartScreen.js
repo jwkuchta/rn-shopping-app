@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, FlatList, Button, ActivityIndicator, ColorPropType } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import colors from '../../constants/colors'
+import Colors from '../../constants/Colors'
 import CartItem from '../../components/shop/CartItem'
 import * as cartActions from '../../store/actions/cart'
 import * as orderActions from '../../store/actions/orders'
@@ -29,7 +29,6 @@ const CartScreen = props => {
     })
 
     const addOrderHandler = async () => {
-        console.log('IN THE ADD ORDER HANDLER!!!!!!!!!!')
         setIsLoading(true)
         await dispatch(orderActions.addOrder(cartItems, cartTotal))
         setIsLoading(false)
@@ -41,7 +40,7 @@ const CartScreen = props => {
                 <Text style={styles.summaryText}>
                     <Text style={styles.amount}>Total: ${Math.round(cartTotal.toFixed(2) * 100) / 100}</Text>
                 </Text>
-                {isLoading ? <ActivityIndicator size='small' color={colors.primary} /> : 
+                {isLoading ? <ActivityIndicator size='small' color={Colors.primary} /> : 
                 <Button 
                 title='Order Now' 
                 disabled={cartItems.length === 0 ? true : false}
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     amount: {
-        color: colors.primary
+        color: Colors.primary
     }
 })
 

@@ -1,12 +1,11 @@
 import React, { useReducer, useCallback, useState, useEffect } from 'react'
-import { ScrollView, View, KeyboardAvoidingView, StyleSheet, ActivityIndicator, Button, Alert } from 'react-native'
+import { ScrollView, View, StyleSheet, ActivityIndicator, Button, Alert } from 'react-native'
 import Input from '../../components/UI/Input'
 import Card from '../../components/UI/Card'
-import Colors from '../..//constants/colors'
-import { LinearGradient } from 'expo-linear-gradient' // you can use it to set colors between transions
+import Colors from '../../constants/Colors'
+import { LinearGradient } from 'expo-linear-gradient' // you can use it to set colors between transitions
 import { useDispatch } from 'react-redux'
 import * as authActions from '../../store/actions/auth'
-import colors from '../..//constants/colors'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 
@@ -110,11 +109,6 @@ const AuthScreen = props => {
     }, [dispatchFormState])
 
     return (
-        // <KeyboardAvoidingView
-        //   behavior="padding"
-        //   keyboardVerticalOffset={50}
-        //   style={styles.screen}
-        // >
           <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
             <Card style={styles.authContainer}>
               <ScrollView>
@@ -142,7 +136,7 @@ const AuthScreen = props => {
                   initialValue=""
                 />
                 <View style={styles.buttonContainer}>
-                  {isLoading ? <ActivityIndicator size='large' color={colors.primary} /> : (
+                  {isLoading ? <ActivityIndicator size='large' color={Colors.primary} /> : (
                       <Button
                       title={isSignup ? 'Sign Up' : 'Login'}
                       color={Colors.primary}
@@ -160,7 +154,6 @@ const AuthScreen = props => {
               </ScrollView>
             </Card>
           </LinearGradient>
-        // </KeyboardAvoidingView>
       )
 }
 
@@ -189,3 +182,5 @@ AuthScreen.navigationOptions = {
 }
 
 export default AuthScreen
+
+
