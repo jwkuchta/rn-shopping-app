@@ -12,23 +12,27 @@ const StartupScreen = props => {
         // check for valid token
         const tryLogin = async () => {
             const userData = await AsyncStorage.getItem('userData')
+            console.log('USER DATA FROM THE STARTUP SCREEN', userData)
             if (!userData) {
                 props.navigation.navigate('Auth')
                 return
             }
             const parsedData = JSON.parse(userData)
-            const { token, userId, tokenExpirationDate } = parsedData
-            const expirationDate = new Date(tokenExpirationDate)
+            console.log('USER DATA IN THE STARTUP SCREEN', parsedData)
+            const { token, userId, tokenExpDate } = parsedData
+            const expirationDate = new Date(tokenExpDate)
 
             if (expirationDate <= new Date() || !token || !userId) {
                 props.navigation.navigate('Auth')
                 return
             }
+
+            const tokenExpTime = expirationDate.getTime() - new Date().getTime()
             props.navigation.navigate('Shop')
-            dispatch(authenticate(userId, token))
+            dispatch(authenticate(userId, token, tokenExpTime))
         }
         tryLogin()
-    }, [])
+    }, [dispatch])
 
     return (
         <View>

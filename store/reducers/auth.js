@@ -1,4 +1,4 @@
-import { LOGIN, SIGNUP, LOGOUT } from "../actions/auth"
+import { LOGOUT, AUTHENTICATE } from "../actions/auth"
 
 const initialState = {
     token: null,
@@ -7,18 +7,15 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case LOGIN:
+        case AUTHENTICATE:
+            console.log('IN THE AUTHENTICATE REDUCER, PAYLOAD: ', action.payload)
             return {
                 token: action.payload.token,
                 userId: action.payload.userId
             }
         case LOGOUT:
+            console.log('IN THE LOGOUT REDUCER')
             return initialState
-        case SIGNUP:
-            return {
-                token: action.payload.token,
-                userId: action.payload.userId
-            }
         default:
             return state
     }

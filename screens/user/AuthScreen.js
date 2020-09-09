@@ -35,7 +35,7 @@ const formReducer = (state, action) => {
 
 const AuthScreen = props => {
 
-    const [ isSignup, setIsSignup ] = useState(false) // switched between login/signup
+    const [ isSignup, setIsSignup ] = useState(false) 
     const [ isLoading, setIsLoading ] = useState(false)
     const [ error, setError ] = useState()
 

@@ -9,11 +9,11 @@ import * as cartActions from '../../store/actions/cart'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
 import * as productActions from '../../store/actions/products'
+import { AsyncStorage } from 'react-native'
 
 const ProductsOverviewScreen = props => {
 
     const products = useSelector(state => state.products.availableProducts)
-    console.log('PRODUCTSSSSSSSSSSS: ', products)
     const dispatch = useDispatch()
 
     const [ fetching, setFetching ] = useState(false)

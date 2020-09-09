@@ -1,7 +1,9 @@
-export const SIGNUP = 'SIGNUP'
-export const LOGIN = 'LOGIN'
+// export const SIGNUP = 'SIGNUP'
+// export const LOGIN = 'LOGIN'
 export const AUTHENTICATE = 'AUTHENTICATE'
 export const LOGOUT = 'LOGOUT'
+
+let timer
 
 import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
 
@@ -10,11 +12,17 @@ import { AsyncStorage } from 'react-native' // can be used to save data on the d
 const authSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`
 const authLoginUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
 
-export const authenticate = (userId, token) => {
-    return { type: AUTHENTICATE, payload: {
-        userId: userId,
-        token: token
-    }}
+export const authenticate = (userId, token, tokenExpTime) => {
+    return dispatch => {
+        dispatch(setLogoutTimer(tokenExpTime))
+        dispatch({ 
+            type: AUTHENTICATE, 
+            payload: {
+                userId: userId,
+                token: token
+            }
+        })
+    }
 }
 
 export const signup = (email, password) => {
@@ -35,23 +43,20 @@ export const signup = (email, password) => {
             const errorId = errorResData.error.message;
             let message = 'Something went wrong!';
             if (errorId === 'EMAIL_EXISTS') {
-             message = 'This email exists already!';
+                message = 'This email exists already!';
             }
             throw new Error(message);
         }
         const resData = await response.json()
-        // dispatch({ 
-        //     type: SIGNUP, payload: {
-        //         token: resData.idToken,
-        //         userId: resData.localId
-        //     } 
-        // })
-        dispatch({ 
-            type: AUTHENTICATE, payload: {
-                token: resData.idToken,
-                userId: resData.localId
-            } 
-        })
+        console.log('RES DATA FROM SIGNUP ACTION: ', resData)
+        dispatch(authenticate(
+            resData.localId,
+            resData.idToken,
+            parseInt(resData.expiresIn) * 1000
+            )
+        )
+        const expDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
+        saveDataToStorage(resData.idToken, resData.localId, expDate)
     }
 }
 
@@ -77,36 +82,57 @@ export const login = (email, password) => {
             } else if (errorId === 'INVALID_PASSWORD') {
                 message = 'This password is not valid!';
             }
-        throw new Error(message)
+            throw new Error(message)
         }
         const resData = await response.json()
-        // dispatch({ 
-        //     type: LOGIN, payload: {
-        //         token: resData.idToken,
-        //         userId: resData.localId
-        //     } 
-        // })
-        dispatch({ 
-            type: AUTHENTICATE, payload: {
-                token: resData.idToken,
-                userId: resData.localId
-            } 
-        })
+        dispatch(
+            authenticate(
+                resData.localId, 
+                resData.token, 
+                parseInt(resData.expiresIn) * 1000
+            )
+        )
         // after we dispatch login, we save the token
         const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000)
-        saveToken(resData.idToken, resData.localId, expirationDate)
+        saveDataToStorage(resData.idToken, resData.localId, expirationDate)
     }
 }
 
 export const logout = () => {
+    console.log('IN THE LOGOUT ACTION')
+    clearLogoutTimer()
+    // AsyncStorage.removeItem('userData') ???
+    AsyncStorage.removeItem('')
     return { type: LOGOUT }
 }
 
-const saveToken = (token, userId, expDate) => {
+const clearLogoutTimer = () => {
+    if (timer) {
+        clearTimeout(timer)
+    }
+}
+
+// const setLogoutTimer = tokenExpTime => {
+//     return dispatch => {
+//         timer = setTimeout(() => {
+//             dispatch(logout())
+//         }, tokenExpTime)
+//     } 
+// }
+
+const setLogoutTimer = tokenExpTime => {
+    return dispatch => {
+        timer = setTimeout(() => {
+            dispatch(logout())
+        }, 5000)
+    } 
+}
+
+const saveDataToStorage = (token, userId, expDate) => {
     AsyncStorage.setItem('userData', JSON.stringify({ // the second argument has to be a string
         token: token,
         userId: userId,
-        tokenExpirationDate: expDate.toISOString()
+        tokenExpDate: expDate.toISOString()
     }))
 }
 
