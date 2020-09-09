@@ -122,14 +122,9 @@ const EditProductScreen = props => {
     }
 
     return (
-        // <KeyboardAvoidingView
-        // style={{ flex: 1 }}
-        // behavior='padding'
-        // keyboardVerticalOffset={100}
-        // >
-            <ScrollView>
-                <View style={styles.form}>
-                    <Input
+        <ScrollView>
+            <View style={styles.form}>
+                <Input
                     id='title'
                     label="Title"
                     errorText="Please enter a valid title"
@@ -141,8 +136,8 @@ const EditProductScreen = props => {
                     initialValue={editedProd ? editedProd.title : ''}
                     initiallyValid={!!editedProd}
                     required
-                    />
-                    <Input
+                />
+                <Input
                     id='imageUrl'
                     label="Image Url"
                     errorText="Please enter a valid image URL"
@@ -152,9 +147,9 @@ const EditProductScreen = props => {
                     initialValue={editedProd ? editedProd.imageUrl : ''}
                     initiallyValid={!!editedProd}
                     required
-                    />
-                    {!editedProd && (
-                        <Input
+                />
+                {!editedProd && (
+                    <Input
                         id='price'
                         label="Price"
                         errorText="Please enter a valid price"
@@ -163,9 +158,9 @@ const EditProductScreen = props => {
                         onInputChange={inputChangeHandler}
                         required
                         min={0.1}
-                        />
-                    )}
-                    <Input
+                    />
+                )}
+                <Input
                     id='description'
                     label="Peoduct Description"
                     errorText="Please enter a valid product description"
@@ -178,10 +173,9 @@ const EditProductScreen = props => {
                     initiallyValid={!!editedProd}
                     required
                     minLength={10}
-                    />
-                </View>   
-            </ScrollView>  
-        // </KeyboardAvoidingView>
+                />
+            </View>   
+        </ScrollView>  
     )
 }
 
@@ -192,8 +186,6 @@ EditProductScreen.navigationOptions = (navData) => {
         headerRight: () => (
             <Ionicons 
                 name={Platform.OS === 'android' ? 'md-checkmark' : 'ios-save'} 
-                // headerTitle='save'
-                // label='save'
                 size={23}
                 style={{marginRight: 15}}
                 color={Platform.OS === 'android' ? 'white' : Colors.primary}

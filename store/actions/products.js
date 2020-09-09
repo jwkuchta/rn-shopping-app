@@ -93,9 +93,9 @@ export const updateProduct = (prodId, title, imageUrl, description) => {
         })
         const resData = await response.json()
         // had to comment it out cause the dispatch was not rea
-        // if (!response.ok) {
-        //     throw new Error('Something went wrong!')
-        // } 
+        if (!response.ok) {
+            throw new Error('Something went wrong!')
+        } 
         dispatch({ 
             type: UPDATE_PRODUCT, 
             payload: { 

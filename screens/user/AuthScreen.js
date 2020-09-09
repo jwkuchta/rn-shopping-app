@@ -94,8 +94,8 @@ const AuthScreen = props => {
         } catch (err) {
             setError(err.message)
             setIsLoading(false)
-            // why in useEffect and not here?
-            // Alert.alert('something went wrong', error, [ {text: 'ok'} ])
+            // why in useEffect and not here ???
+            Alert.alert('something went wrong', error, [ {text: 'ok'} ])
         }
     }
 

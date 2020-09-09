@@ -121,16 +121,10 @@ const setLogoutTimer = tokenExpTime => {
 }
 
 const saveDataToStorage = (token, userId, expDate) => {
-    AsyncStorage.setItem('userData', JSON.stringify({ // the second argument has to be a string
+    AsyncStorage.setItem('userData', JSON.stringify({ // the second argument has to be a string !!!
         token: token,
         userId: userId,
         tokenExpDate: expDate.toISOString()
     }))
 }
-
-// import { AsyncStorage } from 'react-native';
-
-// import { FIREBASE_API_KEY as apiKey} from '../../constants/_api_keys'
-// const authSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`
-// const authLoginUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
 

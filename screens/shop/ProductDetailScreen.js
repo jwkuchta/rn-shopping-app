@@ -27,11 +27,6 @@ ProductDetailScreen.navigationOptions = navData => {
     
     return {
         headerTitle: navData.navigation.getParam('productTitle')
-        // headerLeft: () => {
-        //     return (
-        //         <Button title='I am a button'></Button>
-        //     )
-        // }
     }
 }
 

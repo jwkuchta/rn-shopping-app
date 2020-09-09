@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   orders: ordersReducer,
   auth: authReducer
 })
-                                      // remove when ready for deployment
+                                      // remove when ready for deployment !!!
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk)) 
 
 const fetchFonts = () => {

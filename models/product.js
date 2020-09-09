@@ -1,5 +1,3 @@
-import products from "../store/reducers/products"
-
 class Product {
     constructor(id, ownerId, title, imageUrl, description, price) {
         this.id = id
