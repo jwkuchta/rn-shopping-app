@@ -29,7 +29,9 @@ const formReducer = (state, action) => {
             inputValidities: updatedInputValidities
         }
     }
+    console.log(state)
     return state
+
 }
 
 const EditProductScreen = props => {
@@ -66,8 +68,9 @@ const EditProductScreen = props => {
     }, [error])
 
     const submitHandler = useCallback(async () => {
+        // console.log('form state', formState)
         if (!formState.formIsValid) {
-            Alert.alert('Invalid title', 'Please submit a valid title', [{ text: 'Ok'}])
+            Alert.alert('Invalid input', 'Please submit a valid input', [{ text: 'Ok'}])
             return
         }
         setIsLoading(true)
@@ -89,6 +92,7 @@ const EditProductScreen = props => {
             }
             props.navigation.goBack()
         } catch (err) {
+            console.log('in the catch on line 96')
             setError(err.message)
             // why can't error be set here ???
             // Alert.alert('ERROR IN THE EDIT PRODUCT SCREEN', error, [{text: 'okay'}])
@@ -162,7 +166,7 @@ const EditProductScreen = props => {
                 )}
                 <Input
                     id='description'
-                    label="Peoduct Description"
+                    label="Product Description"
                     errorText="Please enter a valid product description"
                     autoCapitalize="sentences" 
                     autoCorrect
@@ -172,7 +176,7 @@ const EditProductScreen = props => {
                     initialValue={editedProd ? editedProd.description : ''}
                     initiallyValid={!!editedProd}
                     required
-                    minLength={10}
+                    minLength={7}
                 />
             </View>   
         </ScrollView>  

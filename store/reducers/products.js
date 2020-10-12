@@ -21,13 +21,15 @@ export default (state = initState, action) => {
                 userProducts: state.userProducts.filter(prod => prod.id !== action.payload)
             }
         case CREATE_PRODUCT:
+            console.log('in create product reducer')
             const newProduct = new Product(
                 action.payload.id,
                 action.payload.ownerId,
                 action.payload.title, 
                 action.payload.imageUrl,
                 action.payload.description,
-                action.payload.price
+                action.payload.price,
+                action.payload.ownerPushToken
             )
             return {
                 ...state,

@@ -2,6 +2,8 @@ export const DELETE_PRODUCT = 'DELETE_PRODUCT'
 export const CREATE_PRODUCT = 'CREATE_PRODUCT'
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
 export const SET_PRODUCTS = 'SET_PRODUCTS'
+import * as Notifications from 'expo-notifications'
+import * as Permissions from 'expo-permissions'
 
 import Product from '../../models/product'
 
@@ -41,9 +43,23 @@ export const fetchProducts = () => {
 }
 
 export const createProduct = (title, imageUrl, description, price) => {
+
     return async (dispatch, getState) => {
+        let pushToken
+        // check whether a permission was granted or not
+        let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+        if (statusObj.status !== 'granted') {
+            statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+        }
+        if (statusObj.status !== 'granted') {
+            pushToken = null
+        } else {
+            pushToken = (await Notifications.getExpoPushTokenAsync()).data
+            console.log('push token in create action line 60', pushToken)
+        }
         const token = getState().auth.token
         const userId = getState().auth.userId
+        console.log('token and user id', token, userId)
         const response = await fetch(`${baseApiUrl}.json?auth=${token}`, {
             method: 'POST',
             headers: {
@@ -54,13 +70,16 @@ export const createProduct = (title, imageUrl, description, price) => {
                 imageUrl,
                 description,
                 price,
-                ownerId: userId
+                ownerId: userId,
+                ownerPushToken: pushToken
             })
         })
         if (!response.ok) {
+            console.log('response on line 79', response)
             throw new Error('Something went wrong!')
         }
         const data = await response.json()
+        console.log('data line 83', data)
         dispatch({ 
             type: CREATE_PRODUCT, 
             payload: { 
@@ -69,7 +88,8 @@ export const createProduct = (title, imageUrl, description, price) => {
                 imageUrl, 
                 description, 
                 price,
-                ownerId: userId
+                ownerId: userId,
+                ownerPushToken: pushToken
             } 
         })
     }

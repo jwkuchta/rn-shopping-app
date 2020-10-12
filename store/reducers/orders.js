@@ -1,11 +1,13 @@
 import { ADD_ORDER, SET_ORDERS } from "../actions/orders"
 import Order from '../../models/order'
+import { exp } from "react-native/Libraries/Animated/src/Easing"
 
 const initState = {
     orders: []
 }
 
-export default ordersReducer = (state = initState, action) => {
+const ordersReducer = (state = initState, action) => {
+    debugger
     switch(action.type) {
         case ADD_ORDER:
             const newOrder = new Order(
@@ -27,5 +29,7 @@ export default ordersReducer = (state = initState, action) => {
             return state
     }
 }
+
+export default ordersReducer
 
 
