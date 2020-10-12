@@ -22,7 +22,8 @@ const CartScreen = props => {
                 productTitle: state.carts.items[key].productTitle,
                 productPrice: state.carts.items[key].productPrice,
                 quantity: state.carts.items[key].quantity,
-                total: state.carts.items[key].total
+                total: state.carts.items[key].total,
+                ownerPushToken: state.carts.items[key].ownerPushToken
             })
         }
         return cartItemsArr.sort((a, b) => a.productId - b.productId)
