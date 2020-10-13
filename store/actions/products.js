@@ -26,7 +26,8 @@ export const fetchProducts = () => {
                     data[key].title,
                     data[key].imageUrl,
                     data[key].description,
-                    data[key].price
+                    data[key].price,
+                    data[key].ownerPushToken
                 ))
             }
             dispatch({ 

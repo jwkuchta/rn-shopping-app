@@ -61,6 +61,25 @@ export const addOrder = (cartItems, totalAmount) => {
                 date: date
             } 
         })
+        // for each item send a push notification 
+        for (item of cartItems) {
+            const pushToken = item.ownerPushToken
+            console.log('item, pushToken', item, pushToken)
+
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'post', 
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json',
+                    'accept-encoding': 'gzip, deflate'
+                },
+                body: JSON.stringify({
+                    to: pushToken,
+                    title: 'order was placed',
+                    body: item.productTitle
+                })
+            })
+        }
     }
 }
 

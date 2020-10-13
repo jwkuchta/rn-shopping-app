@@ -45,7 +45,8 @@ export default (state = initState, action) => {
                 action.payload.title,
                 action.payload.imageUrl,
                 action.payload.description,
-                state.userProducts[prodIndexUser].price
+                state.userProducts[prodIndexUser].price,
+                state.userProducts[prodIndexUser].ownerPushToken
             )
             const updatedUserProds = [...state.userProducts]
             const updatedAvailableProducts = [...state.availableProducts]

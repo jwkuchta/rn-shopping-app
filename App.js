@@ -12,6 +12,16 @@ import ordersReducer from './store/reducers/orders'
 import ReduxThunk from 'redux-thunk'
 import authReducer from './store/reducers/auth'
 import NavigationContainer from './navigation/NavigationContainer';
+import * as Notifications from 'expo-notifications'
+
+// will show notifications even when app running (in the foreground)
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true
+    }
+  }
+})
 
 const rootReducer = combineReducers({
   products: productsReducer,
